@@ -16,11 +16,8 @@
  * along with snrka.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "snrkio.h"
+#ifndef SNRKIO_H
+#define SNRKIO_H
 
-#include <stdio.h>
-
-int main(int argc, char ** argv) {
-    printf("version %s\n", VERSION);
-}
+#endif /* SNRKIO_H */
 
