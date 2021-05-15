@@ -20,10 +20,11 @@ cflags = -Wall -flto -fdiagnostics-color -Iinclude
 ldflags =
 sanflags = -fsanitize=address,undefined
 versuffix =
+libs =
 
 include active.gen.ninja
 
-defines = $defines -DVERSION="\"$$(git describe --dirty)$suffix\""
+defines = $defines -DVERSION="\"$$(git describe --tags --dirty)$suffix\""
 
 rule cc
   deps = gcc
