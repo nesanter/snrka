@@ -1,0 +1,55 @@
+# Copyright © 2021 Noah Santer <personal@mail.mossy-tech.com>
+#
+# This file is part of snrka.
+#
+# snrka is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# snrka is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with snrka.  If not, see <https://www.gnu.org/licenses/>.
+
+builddir = out
+cflags = -Wall -flto -fdiagnostics-color -Iinclude
+ldflags =
+sanflags = -fsanitize=address,undefined
+versuffix =
+
+include active.gen.ninja
+
+defines = $defines -DVERSION="\"$$(git describe --dirty)$suffix\""
+
+rule cc
+  deps = gcc
+  depfile = $out.d
+  command = gcc -MMD -MF $out.d $defines $cflags $in -c -o $out
+
+rule bin
+  deps = gcc
+  depfile = $out.d
+  command = gcc -MMD -MF $out.d $defines $cflags $in -o $out $ldflags $libs
+
+rule so
+  deps = gcc
+  depfile = $out.d
+  command = gcc -MMD -MF $out.d -fPIC $defines $cflags -shared $in -o $out $
+            $ldflags $libs
+
+# ...sources
+build out/main.o:                   cc src/main.c
+
+# ...outputs
+build snrkio:                       bin $
+    out/main.o
+
+# toplevel
+build all: phony snrkio
+
+default all
+
